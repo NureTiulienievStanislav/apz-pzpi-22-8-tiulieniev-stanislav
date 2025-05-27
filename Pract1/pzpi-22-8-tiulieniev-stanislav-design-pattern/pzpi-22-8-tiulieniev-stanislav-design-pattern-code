@@ -1,1 +1,22 @@
+   interface CarBuilder {  
+     setColor(color: string): void;  
+     setEngine(engine: Двигун): void;  
+     setWheels(wheels: Колесо[]): void;  
+     setGPS(gps: GPS): void;  
+     getResult(): Автомобіль;  
+   }  
+
+
+   class Автомобіль  {  
+     колір : string;  
+     двигун : Двигун ;  
+     колеса: Колесо[];  
+     GPS: GPS;  
+     constructor() {  
+       this. колір = "";  
+       this. двигун = new Двигун();  
+       this. колеса = [];  
+      this.GPS = new GPS();  
+   }  
+}  
 
