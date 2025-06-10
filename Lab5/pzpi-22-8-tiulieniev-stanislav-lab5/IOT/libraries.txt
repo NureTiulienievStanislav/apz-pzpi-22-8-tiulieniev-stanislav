@@ -1,0 +1,12 @@
+# Wokwi Library List
+# See https://docs.wokwi.com/guides/libraries
+
+Blynk
+AccelStepper
+Ultrasonic
+HCSR04 ultrasonic sensor
+BlynkESP32_BT_WF
+DHT sensor library
+HttpClient
+ArduinoJson
+PubSubClient

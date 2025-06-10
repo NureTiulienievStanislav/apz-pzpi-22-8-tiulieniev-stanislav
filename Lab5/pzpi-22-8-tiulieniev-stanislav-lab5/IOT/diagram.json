@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "author": "Abdul Kaiz",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": -23.96, "attrs": {} },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic1",
+      "top": -209.7,
+      "left": -71.3,
+      "attrs": { "distance": "150" }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper1",
+      "top": -313.19,
+      "left": -517.97,
+      "attrs": { "size": "17" }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper2",
+      "top": 61.21,
+      "left": 355.63,
+      "attrs": { "size": "17" }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper3",
+      "top": 61.21,
+      "left": -498.77,
+      "attrs": { "size": "17" }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper4",
+      "top": -284.39,
+      "left": 336.43,
+      "attrs": { "size": "17" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": -112.8,
+      "left": 145.8,
+      "attrs": { "volume": "0.1" }
+    },
+    { "type": "wokwi-a4988", "id": "drv1", "top": 187.2, "left": 196.8, "attrs": {} },
+    { "type": "wokwi-a4988", "id": "drv2", "top": -62.4, "left": 388.8, "attrs": {} },
+    { "type": "wokwi-a4988", "id": "drv3", "top": -100.8, "left": -456, "attrs": {} },
+    { "type": "wokwi-a4988", "id": "drv4", "top": 312, "left": -446.4, "attrs": {} },
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic2",
+      "top": 346.1,
+      "left": -60.3,
+      "rotate": 180,
+      "attrs": {}
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "ultrasonic1:TRIG", "esp:26", "green", [ "v76.8", "h-58", "v144", "h-38.4" ] ],
+    [ "ultrasonic1:ECHO", "esp:27", "green", [ "v57.6", "h-144.8", "v153.6" ] ],
+    [ "esp:GND.1", "ultrasonic1:GND", "black", [ "h-182.25", "v-240", "h230.4" ] ],
+    [ "bz1:1", "esp:GND.2", "green", [ "v0" ] ],
+    [ "esp:15", "bz1:2", "green", [ "v0", "h134.4" ] ],
+    [ "esp:18", "drv1:DIR", "green", [ "h57.6", "v163.2" ] ],
+    [ "esp:19", "drv1:STEP", "green", [ "h96", "v144" ] ],
+    [ "drv1:SLEEP", "drv1:RESET", "yellow", [ "h-19.2", "v-9.6" ] ],
+    [ "drv1:2B", "stepper2:B-", "orange", [ "h57.75", "v86.48", "h144" ] ],
+    [ "drv1:2A", "stepper2:B+", "gold", [ "h38.55", "v38.48", "h144" ] ],
+    [ "drv1:1A", "stepper2:A+", "red", [ "h19.35", "v96.08", "h153.6" ] ],
+    [ "drv1:1B", "stepper2:A-", "#8f4814", [ "h9.75", "v115.28", "h163.2" ] ],
+    [ "drv4:RESET", "drv4:SLEEP", "green", [ "h-19.2", "v9.6" ] ],
+    [ "drv4:DIR", "esp:18", "magenta", [ "h-76.8", "v86.4", "h624", "v-364.8" ] ],
+    [ "drv4:STEP", "esp:19", "purple", [ "h-144", "v144", "h729.6", "v-422.4" ] ],
+    [ "drv4:1B", "stepper3:A-", "green", [ "h19.35", "v-76.72", "h-57.6" ] ],
+    [ "drv4:1A", "stepper3:A+", "green", [ "h48.15", "v-76.72", "h-86.4", "v-9.6" ] ],
+    [ "drv4:2A", "stepper3:B+", "green", [ "h67.35", "v-86.32", "h-86.4", "v-19.2" ] ],
+    [ "drv4:2B", "stepper3:B-", "green", [ "h86.55", "v-95.92" ] ],
+    [ "drv3:RESET", "drv3:SLEEP", "green", [ "h-19.2", "v9.6" ] ],
+    [
+      "drv3:DIR",
+      "esp:19",
+      "green",
+      [ "h-57.6", "v57.6", "h278.4", "v268.8", "h355.2", "v-201.6" ]
+    ],
+    [ "drv3:STEP", "esp:18", "green", [ "h-28.8", "v67.2", "h336", "v230.4", "h240", "v-144" ] ],
+    [ "drv3:1B", "stepper1:A-", "green", [ "h19.35", "v-67.12", "h-67.2" ] ],
+    [ "drv3:1A", "stepper1:A+", "green", [ "h28.95", "v-67.12", "h-67.2" ] ],
+    [ "drv3:2A", "stepper1:B+", "green", [ "h38.55", "v-57.52", "h-67.2" ] ],
+    [ "drv3:2B", "stepper1:B-", "green", [ "h48.15", "v-57.52" ] ],
+    [ "drv2:RESET", "drv2:SLEEP", "green", [ "h-19.2", "v9.6" ] ],
+    [ "drv2:STEP", "esp:18", "green", [ "h-172.8", "v105.6" ] ],
+    [ "drv2:DIR", "esp:19", "green", [ "h-230.4", "v57.6" ] ],
+    [ "drv2:2B", "stepper4:B-", "green", [ "h19.35", "v-57.52", "h-28.8" ] ],
+    [ "drv2:2A", "stepper4:B+", "green", [ "h28.95", "v-57.52", "h-48" ] ],
+    [ "drv2:1A", "stepper4:A+", "green", [ "h38.55", "v-57.52", "h-57.6" ] ],
+    [ "drv2:1B", "stepper4:A-", "green", [ "h48.15", "v-67.12", "h-86.4", "v-19.2" ] ],
+    [ "ultrasonic2:ECHO", "esp:23", "green", [ "v-182.4", "h68" ] ],
+    [ "esp:22", "ultrasonic2:TRIG", "green", [ "h19.2", "v86.4" ] ],
+    [ "ultrasonic2:GND", "esp:GND.3", "black", [ "v-86.4", "h106.8" ] ],
+    [ "ultrasonic2:VCC", "esp:5V", "red", [ "v0" ] ],
+    [ "ultrasonic1:VCC", "esp:5V", "red", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
