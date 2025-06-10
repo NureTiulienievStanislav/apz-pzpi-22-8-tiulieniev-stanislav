@@ -15,7 +15,7 @@ trackway/
 ├── backend/        # Node.js + Express + MongoDB + MQTT API
 ├── frontend/       # React + Tailwind веб-інтерфейс
 ├── android/        # Android-додаток на Kotlin
-├── iot/            # IoT-емулятор або прошивка для ESP32
+├── iot/            # IoT-емулятор ESP32
 ```
 
 ---
