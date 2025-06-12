@@ -93,47 +93,39 @@ UML-діаграма прецедентів демонструє типові с
 ДОДАТОК В
 Програмий код
 
-
-В.1 Обробка повідомлень з MQTT-брокера
-GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/mqtt/client.js
- 
-1 const mqtt = require('mqtt');
- 2 const SensorData = require('../models/SensorData');
- 3 const client = mqtt.connect('mqtt://broker.hivemq.com');
- 4
- 5 client.on('connect', () => {
- 6   client.subscribe('trackway/sensors/#');
- 7 });
- 8
- 9 client.on('message', async (topic, message) => {
-10   const data = JSON.parse(message.toString());
-11   const { vehicleId, frontDistance, rearDistance } = data;
-12
-13   await SensorData.create({ vehicleId, frontDistance, rearDistance });
-14 });
-15
-16 module.exports = client;
-
-
-В.2 Схема збереження телеметричних даних
-GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/SensorData.js
+В.1 Модель користувача
+GitHub репозиторій:https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/user.js
 
 1 const mongoose = require('mongoose');
  2
- 3 const SensorDataSchema = new mongoose.Schema({
- 4   vehicleId: mongoose.Schema.Types.ObjectId,
- 5   timestamp: { type: Date, default: Date.now },
- 6   frontDistance: Number,
- 7   rearDistance: Number,
- 8 });
- 9
-10 module.exports = mongoose.model('SensorData', SensorDataSchema);
+ 3 const UserSchema = new mongoose.Schema({
+ 4   username: String,
+ 5   password: String,
+ 6   role: { type: String, enum: ['admin', 'driver'], default: 'driver' },
+ 7 });
+ 8
+ 9 module.exports = mongoose.model('User', UserSchema);
+
+В.2 Модель маршруту
+GitHub репозиторій:https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/Route.js
+
+1 const mongoose = require('mongoose');
+ 2
+ 3 const RouteSchema = new mongoose.Schema({
+ 4   pos_start: String,
+ 5   pos_finish: String,
+ 6   vehicle_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' },
+ 7 });
+ 8
+ 9 module.exports = mongoose.model('Route', RouteSchema);
 
 
-В.3 Додавання транспортного засобу з IoT-полями
-GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/Vehicle.js
 
- 1 const mongoose = require('mongoose');
+
+В.3 Модель транспортного засобу
+GitHub репозиторій:https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/Vehicle.js
+
+1 const mongoose = require('mongoose');
  2
  3 const VehicleSchema = new mongoose.Schema({
  4   make: String,
@@ -145,4 +137,3 @@ GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pz
 10 });
 11
 12 module.exports = mongoose.model('Vehicle', VehicleSchema);
-e', VehicleSchema);
