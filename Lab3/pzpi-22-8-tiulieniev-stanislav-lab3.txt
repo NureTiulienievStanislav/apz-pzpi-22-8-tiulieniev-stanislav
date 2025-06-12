@@ -70,44 +70,54 @@ Frontend реалізовано як SPA на React, з авторизацією
 ДОДАТОК В
 Програмий код
 
-В.1 Обробка та оновлення IoT-даних з MQTT
+В.1 Обробка повідомлень з MQTT-брокера
+client.js
+
 1 const mqtt = require('mqtt');
- 2 const Vehicle = require('./models/Vehicle');
- 3
- 4 const client = mqtt.connect('mqtt://localhost:1883');
- 5
- 6 client.on('connect', () => {
- 7   client.subscribe('trackway/telemetry');
- 8 });
- 9
-10 client.on('message', async (topic, message) => {
-11   try {
-12     const { vin, front, rear } = JSON.parse(message.toString());
-13
-14     if (!vin || isNaN(front) || isNaN(rear)) return;
+ 2 const SensorData = require('../models/SensorData');
+ 3 const client = mqtt.connect('mqtt://broker.hivemq.com');
+ 4
+ 5 client.on('connect', () => {
+ 6   client.subscribe('trackway/sensors/#');
+ 7 });
+ 8
+ 9 client.on('message', async (topic, message) => {
+10   const data = JSON.parse(message.toString());
+11   const { vehicleId, frontDistance, rearDistance } = data;
+12
+13   await SensorData.create({ vehicleId, frontDistance, rearDistance });
+14 });
 15
-16     await Vehicle.findOneAndUpdate(
-17       { vin },
-18       { front_iot: front.toFixed(2), back_iot: rear.toFixed(2) }
-19     );
-20
-21     console.log(`Оновлено: ${vin}`);
-22   } catch (error) {
-23     console.error('MQTT помилка:', error.message);
-24   }
-25 });
+16 module.exports = client;
 
 
+В.2 Схема збереження телеметричних даних
+SensorData.js
 
-В.2 Збереження телеметрії
 1 const mongoose = require('mongoose');
  2
  3 const SensorDataSchema = new mongoose.Schema({
- 4   vin: String,
- 5   front: Number,
- 6   rear: Number,
- 7   timestamp: { type: Date, default: Date.now },
+ 4   vehicleId: mongoose.Schema.Types.ObjectId,
+ 5   timestamp: { type: Date, default: Date.now },
+ 6   frontDistance: Number,
+ 7   rearDistance: Number,
  8 });
  9
 10 module.exports = mongoose.model('SensorData', SensorDataSchema);
 
+
+В.3 Додавання транспортного засобу з IoT-полями
+Vehicle.js
+
+1 const mongoose = require('mongoose');
+ 2
+ 3 const VehicleSchema = new mongoose.Schema({
+ 4   make: String,
+ 5   model: String,
+ 6   year: Number,
+ 7   vin: String,
+ 8   front_iot: String,
+ 9   back_iot: String,
+10 });
+11
+12 module.exports = mongoose.model('Vehicle', VehicleSchema);
