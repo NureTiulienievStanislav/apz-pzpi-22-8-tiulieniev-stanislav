@@ -1,11 +1,11 @@
 # apz-pzpi-22-8-tiulieniev-stanislav
 
-ПЗПІ-22-8
+PZPI-22-8
 
-Тюлєнєв Станіслав
+Tiulieniev Stanislav
 
-Патерн проєктування "Builder"
+Design pattern: "Builder"
 
-Архітектура Amazon Web Services (AWS) 
+Architecture of Amazon Web Services (AWS) 
 
-Програмна система керування автопарком «TrackWay»
+Fleet management software system «TrackWay»
