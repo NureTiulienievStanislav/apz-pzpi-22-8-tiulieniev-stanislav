@@ -71,8 +71,8 @@ Frontend реалізовано як SPA на React, з авторизацією
 Програмий код
 
 В.1 Обробка повідомлень з MQTT-брокера
-client.js
-
+GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/mqtt/client.js
+ 
 1 const mqtt = require('mqtt');
  2 const SensorData = require('../models/SensorData');
  3 const client = mqtt.connect('mqtt://broker.hivemq.com');
@@ -92,7 +92,7 @@ client.js
 
 
 В.2 Схема збереження телеметричних даних
-SensorData.js
+GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/SensorData.js
 
 1 const mongoose = require('mongoose');
  2
@@ -107,9 +107,9 @@ SensorData.js
 
 
 В.3 Додавання транспортного засобу з IoT-полями
-Vehicle.js
+GitHub репозиторій: https://github.com/NureTiulienievStanislav/apz-pzpi-22-8-tiulieniev-stanislav/blob/main/Lab2/pzpi-22-8-tiulieniev-stanislav-lab2/backend/models/Vehicle.js
 
-1 const mongoose = require('mongoose');
+ 1 const mongoose = require('mongoose');
  2
  3 const VehicleSchema = new mongoose.Schema({
  4   make: String,
@@ -121,3 +121,4 @@ Vehicle.js
 10 });
 11
 12 module.exports = mongoose.model('Vehicle', VehicleSchema);
+e', VehicleSchema);
