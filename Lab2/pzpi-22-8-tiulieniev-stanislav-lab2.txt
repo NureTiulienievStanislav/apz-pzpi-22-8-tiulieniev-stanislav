@@ -93,61 +93,43 @@ UML-діаграма прецедентів демонструє типові с
 ДОДАТОК В
 Програмий код
 
-В.1 Обробка списку транспортних засобів
-1 function groupVehiclesByYear(vehicleList) {
-2   const result = {}
-3
-4   for (const vehicle of vehicleList) {
-5     const year = vehicle.year || 'невідомо'
-6     if (!result[year]) {
-7       result[year] = []
-8     }
-9     result[year].push(vehicle)
-10   }
+
+В.1 Модель користувача
+1 const mongoose = require('mongoose');
+ 2
+ 3 const UserSchema = new mongoose.Schema({
+ 4   username: String,
+ 5   password: String,
+ 6   role: { type: String, enum: ['admin', 'driver'], default: 'driver' },
+ 7 });
+ 8
+ 9 module.exports = mongoose.model('User', UserSchema);
+
+
+
+В.2 Модель маршруту
+1 const mongoose = require('mongoose');
+ 2
+ 3 const RouteSchema = new mongoose.Schema({
+ 4   pos_start: String,
+ 5   pos_finish: String,
+ 6   vehicle_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' },
+ 7 });
+ 8
+ 9 module.exports = mongoose.model('Route', RouteSchema);
+
+
+
+В.3 Модель транспортного засобу
+1 const mongoose = require('mongoose');
+ 2
+ 3 const VehicleSchema = new mongoose.Schema({
+ 4   make: String,
+ 5   model: String,
+ 6   year: Number,
+ 7   vin: String,
+ 8   front_iot: String,
+ 9   back_iot: String,
+10 });
 11
-12   return result
-13 }
-
-
-
-
-В.2 Додавання транспортного засобу з перевіркою VIN
-1 exports.createVehicle = async (req, res) => {
-2   try {
-3     const { make, model, year, vin } = req.body
-4
-5     if (!make || !model || !year || !vin) {
-6       return res.status(400).json({ message: 'Не всі поля заповнено' })
-7     }
-8
-9     const duplicate = await Vehicle.findOne({ vin })
-10     if (duplicate) {
-11       return res.status(409).json({ message: 'Такий VIN вже існує' })
-12     }
-13
-14     const vehicle = new Vehicle({ make, model, year, vin })
-15     await vehicle.save()
-16
-17     res.status(201).json(vehicle)
-18   } catch (err) {
-19     res.status(500).json({ message: 'Помилка на сервері' })
-20   }
-21 }
-
-
-
-В.3 Видалення транспортного засобу за ID
-1 exports.deleteVehicle = async (req, res) => {
-2   try {
-3     const { id } = req.params
-4     const vehicle = await Vehicle.findByIdAndDelete(id)
-5
-6     if (!vehicle) {
-7       return res.status(404).json({ message: 'Авто не знайдено' })
-8     }
-9
-10     res.status(200).json({ message: 'Авто успішно видалено' })
-11   } catch (err) {
-12     res.status(500).json({ message: 'Помилка сервера' })
-13   }
-14 }
+12 module.exports = mongoose.model('Vehicle', VehicleSchema);
