@@ -95,6 +95,8 @@ UML-діаграма прецедентів демонструє типові с
 
 
 В.1 Модель користувача
+user.js
+
 1 const mongoose = require('mongoose');
  2
  3 const UserSchema = new mongoose.Schema({
@@ -108,6 +110,8 @@ UML-діаграма прецедентів демонструє типові с
 
 
 В.2 Модель маршруту
+Route.js
+
 1 const mongoose = require('mongoose');
  2
  3 const RouteSchema = new mongoose.Schema({
@@ -121,6 +125,8 @@ UML-діаграма прецедентів демонструє типові с
 
 
 В.3 Модель транспортного засобу
+Vehicle.js
+
 1 const mongoose = require('mongoose');
  2
  3 const VehicleSchema = new mongoose.Schema({
