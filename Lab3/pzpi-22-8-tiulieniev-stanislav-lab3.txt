@@ -70,63 +70,44 @@ Frontend реалізовано як SPA на React, з авторизацією
 ДОДАТОК В
 Програмий код
 
-В.1 Програмна логіка IoT-модуля
-1 const mqtt = require('mqtt')
- 2 const readline = require('readline')
- 3 const rl = readline.createInterface({
- 4   input: process.stdin,
- 5   output: process.stdout
- 6 })
- 7 let config = {
- 8   vin: '',
- 9   interval: 3000,
-10   brokerUrl: 'mqtt://localhost:1883',
-11   topic: 'trackway/telemetry'
-12 }
-13 function askForConfig() {
-14   rl.question('Введіть VIN автомобіля: ', (vin) => {
-15     config.vin = vin.trim()
-16     rl.question('Інтервал оновлення (мс): ', (interval) => {
-17       const parsed = parseInt(interval)
-18       config.interval = isNaN(parsed) ? 3000 : parsed
-19       rl.close()
-20       startTransmission()
-21     })
-22   })
-23 }
-24 function generateDistance() {
-25   const value = (Math.random() * 10).toFixed(2)
-26   return parseFloat(value)
-27 }
-28 function validate(value) {
-29   return !isNaN(value) && value >= 0 && value <= 10
-30 }
-31 function startTransmission() {
-32   const client = mqtt.connect(config.brokerUrl)
-33   client.on('connect', () => {
-34     console.log(`Підключено до брокера ${config.brokerUrl}`)
-35     console.log(`Починається передача кожні ${config.interval} мс\n`)
-36
-37     setInterval(() => {
-38       const front = generateDistance()
-39       const rear = generateDistance()
-40       if (!validate(front) || !validate(rear)) {
-41         console.warn('Дані не пройшли перевірку, пропущено')
-42         return
-43       }
-44       const message = JSON.stringify({
-45         vin: config.vin,
-46         front,
-47         rear
-48       })
-49       client.publish(config.topic, message, () => {
-50         console.log(`Дані надіслано: ${message}`)
-51       })
-52     }, config.interval)
-53   })
-54   client.on('error', (err) => {
-55     console.error('Помилка MQTT:', err.message)
-56   })
-57 }
-58 askForConfig()
+В.1 Обробка та оновлення IoT-даних з MQTT
+1 const mqtt = require('mqtt');
+ 2 const Vehicle = require('./models/Vehicle');
+ 3
+ 4 const client = mqtt.connect('mqtt://localhost:1883');
+ 5
+ 6 client.on('connect', () => {
+ 7   client.subscribe('trackway/telemetry');
+ 8 });
+ 9
+10 client.on('message', async (topic, message) => {
+11   try {
+12     const { vin, front, rear } = JSON.parse(message.toString());
+13
+14     if (!vin || isNaN(front) || isNaN(rear)) return;
+15
+16     await Vehicle.findOneAndUpdate(
+17       { vin },
+18       { front_iot: front.toFixed(2), back_iot: rear.toFixed(2) }
+19     );
+20
+21     console.log(`Оновлено: ${vin}`);
+22   } catch (error) {
+23     console.error('MQTT помилка:', error.message);
+24   }
+25 });
+
+
+
+В.2 Збереження телеметрії
+1 const mongoose = require('mongoose');
+ 2
+ 3 const SensorDataSchema = new mongoose.Schema({
+ 4   vin: String,
+ 5   front: Number,
+ 6   rear: Number,
+ 7   timestamp: { type: Date, default: Date.now },
+ 8 });
+ 9
+10 module.exports = mongoose.model('SensorData', SensorDataSchema);
 
